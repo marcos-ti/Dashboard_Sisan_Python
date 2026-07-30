@@ -1,0 +1,673 @@
+/* =========================================================
+   PADRONIZAÇÃO DO ALINHAMENTO SUPERIOR DE TODAS AS PÁGINAS
+   ========================================================= */
+
+/* Garante que a estrutura principal e o body não tenham desvio/espaçamento no topo */
+html,
+body,
+#wrapper {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Fontes e elementos base */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+button,
+.btn,
+.navbar,
+.card {
+  font-family: "Raleway", "Segoe UI", sans-serif;
+}
+
+/* Ajustado para largura máxima de 2500px */
+body {
+  background-color: #f8f9fa;
+  color: #212529;
+  max-width: 2500px;
+  margin: 0 auto;
+  overflow-x: hidden; /* Evita rolagem horizontal e libera vertical */
+}
+
+h1,
+h2,
+h3 {
+  font-size: 1.6em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1351b4;
+}
+
+p {
+  font-size: 1.2em !important;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+/* Seções e blocos */
+.hero {
+  background-color: #004085;
+  color: white;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.intro-text {
+  background-color: #eafaf1;
+  border-left: 6px solid #0f9b39;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.intro-text h2 {
+  font-weight: 600;
+}
+
+.intro-text p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.painel-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.painel-titulo {
+  font-size: 2em;
+  font-weight: 700;
+  color: #1351b4;
+  margin-top: 80px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+footer img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Ocultando botões e elementos do Qlik */
+#globalSearchToggleButton,
+[data-tid="current-selections-back"],
+[data-tid="current-selections-forward"],
+[tid="currentSelections.toggleGlobalSelections"] {
+  display: none !important;
+}
+
+/* Paginador Qlik */
+.wrap.borderbox.qv-pager {
+  background-color: rgb(248, 249, 252) !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.wrap.borderbox.qv-pager i,
+.wrap.borderbox.qv-pager svg,
+.wrap.borderbox.qv-pager span,
+.wrap.borderbox.qv-pager .lui-icon {
+  color: inherit !important;
+  fill: inherit !important;
+  background-color: transparent !important;
+}
+
+/* Título de objetos Qlik */
+.qv-object .qv-object-title .qv-object-title-text {
+  overflow: hidden;
+  padding-right: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 20px;
+  font-family: "Raleway";
+  font-weight: 800;
+  display: none;
+}
+
+/* Cards customizados */
+.card-custom {
+  width: 260px;
+  height: 400px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  transition: 0.3s;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  margin-top: 50px;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.card-custom:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-azul {
+  background-color: #0056b8;
+}
+
+.card-verde {
+  background-color: #198754;
+}
+
+.card-laranja {
+  background-color: #cc7430;
+}
+
+.btn-custom {
+  background-color: #fdd400;
+  color: #000000;
+  border: none;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.btn-custom:hover {
+  background-color: #e6c200;
+}
+
+/* Fontes KPIs */
+.sn-kpi .sn-kpi-ellips-text {
+  height: 200px;
+  line-height: initial;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 20px;
+}
+
+/* KPIs - cards quadrados em todas as telas */
+.kpi-card {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 300px;
+}
+
+.kpi-card .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.kpi-content {
+  flex: 1;
+  min-height: 10px;
+}
+
+.text-xs {
+  font-size: 0.7rem;
+}
+.text-xs-2 {
+  font-size: 1rem;
+}
+
+.sn-kpi .sn-kpi-data {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sn-kpi .sn-kpi-ellips-text {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 1366px) {
+  .kpi-content {
+    min-height: 120px;
+  }
+
+  .sn-kpi .sn-kpi-data {
+    width: 100%;
+    height: 100%;
+    font-size: 0.76923077em;
+    margin-top: -75px !important;
+  }
+
+  .text-xs {
+    font-size: 0.5rem;
+  }
+
+  .sn-kpi .sn-kpi-ellips-text {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .card-header.font-weight-bold {
+    font-size: 1.1em !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .card-header.font-weight-bold {
+    font-size: 0.95em !important;
+  }
+}
+
+/* Perfil */
+.card-header .header-title {
+  font-size: 1.3em;
+  line-height: 1.25;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-right: 0.5rem;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767.98px) {
+  .card-header .header-title {
+    font-size: 1.1em;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .card-header .header-title {
+    font-size: 1em;
+  }
+}
+
+.card-header .header-actions {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 575.98px) {
+  .card-header .header-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.25rem;
+  }
+}
+
+/* Tabelas SISAN */
+@media (min-width: 1200px) {
+  .qv-object-Sisan_tabelas_template thead th {
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.2;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .qv-object-Sisan_tabelas_template tbody td {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+.qv-object-Sisan_tabelas_template table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Menu contexto Qlik */
+#moreMenuList li[title="Select all"] p {
+  font-size: 0 !important;
+}
+#moreMenuList li[title="Select all"] p::before {
+  content: "Selecionar tudo";
+  font-size: 1rem;
+}
+
+#moreMenuList li[title="Select possible"] p {
+  font-size: 0 !important;
+}
+#moreMenuList li[title="Select possible"] p::before {
+  content: "Selecionar possíveis";
+  font-size: 1rem;
+}
+
+/* Input Search Box */
+.search-listbox input::placeholder {
+  color: transparent !important;
+}
+.search-listbox input {
+  color: #333;
+}
+
+/* Tooltip caixa preta */
+.MuiTooltip-tooltip,
+.njs-1ecc-Tooltip-tooltip {
+  color: transparent !important;
+  position: relative;
+}
+
+.MuiTooltip-tooltip::before,
+.njs-1ecc-Tooltip-tooltip::before {
+  content: "Pesquisar";
+  color: #ffffff !important;
+  font-size: 11px;
+  display: inline-block;
+}
+
+/* Botão Mais opções (...) */
+button[data-testid="actions-toolbar-more"],
+button[title="Mais opções"],
+button[aria-label="Mais opções"] {
+  display: none !important;
+}
+
+.actions-toolbar-default-actions {
+  gap: 4px !important;
+}
+
+/* =========================================================
+   ESTRUTURA DE ROLAGEM, MENU FIXO E MAPA
+   ========================================================= */
+
+/* Libera o container geral para aceitar elementos em sticky */
+#wrapper,
+#content-wrapper {
+  overflow: visible !important;
+}
+
+/* Fixação da Sidebar (Menu Lateral) e do Mapa no Desktop */
+@media (min-width: 769px) {
+  #accordionSidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0 !important; /* Força início no topo absoluto em todas as telas */
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+
+  .sticky-top-map {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 20px;
+    z-index: 10;
+  }
+}
+
+/* =========================================================
+   CORREÇÃO DO FUNDO DO MENU LATERAL (LARGURA E ALTURA FULL)
+   ========================================================= */
+
+/* Garante que o wrapper pai ocupe toda a altura */
+#wrapper {
+  min-height: 100vh !important;
+  align-items: stretch !important;
+}
+
+/* Garante que a sidebar tenha cor de fundo fixa e altura total na viewport */
+@media (min-width: 769px) {
+  #accordionSidebar {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 0 !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    background-color: #0056b8 !important; /* Cor padrão da sidebar para não ficar transparente */
+    z-index: 1000 !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+/* =========================================================
+   AJUSTE DE RESPONSIVIDADE (TABLETS E LAPTOPS / CELULARES)
+   ========================================================= */
+
+/* 1. Ajusta a largura da Sidebar para não espremer o conteúdo */
+@media (min-width: 769px) {
+  #accordionSidebar {
+    width: 220px !important; /* Fixa uma largura adequada */
+    min-width: 220px !important;
+  }
+}
+
+/* 2. Ajuste dos KPIs: 3 colunas em tablets/médias, 1 por linha (100%) estrito em celulares */
+@media (min-width: 768px) and (max-width: 1200px) {
+  .row > .col-12.col-md-2,
+  .row > [class*="col-md-2"] {
+    flex: 0 0 33.333333% !important;
+    max-width: 33.333333% !important;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .row > .col-12.col-md-2,
+  .row > [class*="col-md-2"] {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 1rem;
+  }
+}
+
+/* 3. Permite que o container principal ocupe todo o espaço restante */
+#content-wrapper {
+  flex: 1;
+  min-width: 0; /* Impede estouro de elementos flex */
+}
+
+/* 4. Garante que os valores nos KPIs não fiquem cortados com "..." */
+.kpi-card {
+  height: auto !important;
+  min-height: 110px;
+}
+
+.kpi-content {
+  overflow: visible !important;
+  word-break: break-word;
+}
+
+/* =========================================================
+   REMOÇÃO DA BARRA DE ROLAGEM HORIZONTAL DO MENU
+   ========================================================= */
+
+#accordionSidebar {
+  overflow-x: hidden !important; /* Esconde qualquer barra horizontal */
+  box-sizing: border-box !important;
+}
+
+/* Garante que os links e itens internos do menu fiquem contidos */
+#accordionSidebar .nav-item,
+#accordionSidebar .nav-link {
+  white-space: normal !important; /* Permite quebrar linha no texto */
+  word-wrap: break-word !important; /* Força a quebra de palavras longas */
+  max-width: 100% !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+
+/* =========================================================
+   CORREÇÃO DO ALINHAMENTO DO BOTÃO NO CABEÇALHO DOS CARDS
+   ========================================================= */
+
+/* Força o título a ser um container flexível sem quebrar linha com o botão em desktops */
+.card-title-responsive {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important; /* Impede que o botão caia para a linha de baixo */
+  gap: 1rem; /* Garante um espaço mínimo entre o texto e o botão */
+  word-break: break-word;
+}
+
+/* Garante que o container do botão não encolha nem sofra deformação */
+.card-title-responsive .header-actions {
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+}
+
+/* Em dispositivos móveis pequenos, permite a quebra se a tela for realmente muito estreita */
+@media (max-width: 576px) {
+  .card-title-responsive {
+    flex-wrap: wrap !important;
+  }
+}
+
+/* Força transparência absoluta no container de listagem do filtro do Qlik */
+#QV_indicadores_busca .listbox-container,
+#QV_indicadores_busca [class*="Grid-root"],
+#QV_indicadores_busca [class*="listbox-container"] {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Garante que os itens individuais da lista também fiquem transparentes sobre o fundo laranja */
+#QV_indicadores_busca .lui-list__item,
+#QV_indicadores_busca [role="option"] {
+  background-color: transparent !important;
+}
+
+/* 1. Remove fundos, sombras e bordas de toda a estrutura do filtro e da barra de pesquisa */
+#QV_indicadores_busca,
+#QV_indicadores_busca .qv-object,
+#QV_indicadores_busca .qv-object-content,
+#QV_indicadores_busca .listbox-container,
+#QV_indicadores_busca [class*="listbox-container"],
+#QV_indicadores_busca [class*="Grid-root"],
+#QV_indicadores_busca [class*="MuiBox-root"],
+#QV_indicadores_busca input,
+#QV_indicadores_busca [class*="header-container"] {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* 3. Pinta todos os ícones e SVGs (lupa, fechar, confirmar) de preto */
+#QV_indicadores_busca svg,
+#QV_indicadores_busca svg path,
+#QV_indicadores_busca .lui-icon,
+#QV_indicadores_busca [class*="icon"] {
+  fill: #000000 !important;
+  color: #000000 !important;
+}
+
+/* 4. Cor do placeholder da pesquisa ("Pesquisar...") */
+#QV_indicadores_busca input::placeholder {
+  color: #000000 !important;
+  opacity: 0.8 !important;
+}
+
+/* 5. Comportamento de Hover e Seleção nas linhas de itens (Fundo preto, texto branco) */
+#QV_indicadores_busca [class*="RowColumn-row"]:hover,
+#QV_indicadores_busca [role="row"]:hover,
+#QV_indicadores_busca [role="option"]:hover,
+#QV_indicadores_busca [aria-selected="true"],
+#QV_indicadores_busca [class*="selected"] {
+  background-color: #cc7430 !important;
+  background: #cc7430 !important;
+}
+
+#QV_indicadores_busca [class*="RowColumn-row"]:hover *,
+#QV_indicadores_busca [role="row"]:hover *,
+#QV_indicadores_busca [role="option"]:hover *,
+#QV_indicadores_busca [aria-selected="true"] *,
+#QV_indicadores_busca [class*="selected"] * {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  background-color: transparent !important;
+}
+
+/* Força a barra de pesquisa a ficar visível e expandida permanentemente */
+#QV_indicadores_busca [class*="search"],
+#QV_indicadores_busca input[type="search"],
+#QV_indicadores_busca [class*="search-input-container"],
+#QV_indicadores_busca [class*="input-wrap"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 100% !important;
+}
+
+/* Filtro Adesão - Monitoramento */
+.card-body.mapa_adesao_sisan {
+  background-color: #dbeafe !important;
+  background: #dbeafe !important;
+}
+
+/* Botão voltar ao topo */
+a.scroll-to-top {
+  background-color: #003366 !important;
+  color: #ffffff !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+a.scroll-to-top i {
+  color: #ffffff !important;
+}
+
+a.scroll-to-top:hover {
+  background-color: #002244 !important;
+}
+
+/* Pesquisa Indicadores */
+h6.njs-1ecc-Typography-root.njs-1ecc-Typography-h6.njs-1ecc-Typography-noWrap.css-iaqv7d {
+  background-color: #9a3412 !important;
+  color: #ffffff !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Navegação em celulares */
+/* Garante que o overlay não bloqueie cliques quando inativo */
+.sidebar-overlay {
+    display: none;
+    pointer-events: none; /* Crucial para não interceptar toques indesejados */
+}
+
+.sidebar-overlay.active {
+    display: block;
+    pointer-events: auto; /* Ativa apenas quando o menu estiver aberto */
+}
+

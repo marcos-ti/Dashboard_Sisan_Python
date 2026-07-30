@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Painéis SISAN</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Frameworks e bibliotecas -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/startbootstrap-sb-admin-2@4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Leaflet CSS para o Mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Inclua o JS do Leaflet ANTES do seu script do mapa -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Fonte Raleway -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700;900&display=swap"
+        rel="stylesheet">
+
+    <!-- lib XLSX e Chart.js -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CSS do Tom Select -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap4.min.css" rel="stylesheet">
+    <!-- JS do Tom Select -->
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-search@2.9.8/dist/leaflet-search.min.css" />
+    <script src="https://unpkg.com/leaflet-search@2.9.8/dist/leaflet-search.min.js"></script>
+
+    <!-- Estilo customizado para os painéis -->
+    <style>
+        .table-resolucoes thead th {
+            background-color: #6f1d3d !important;
+            color: #ffffff !important;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .table-resolucoes tbody tr td {
+            font-size: 0.9rem;
+            vertical-align: middle;
+            color: #333333;
+        }
+
+        .table-resolucoes tfoot tr td {
+            background-color: #b8daff !important;
+            color: #004085 !important;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .link-res-detalhes:hover {
+            text-decoration: underline !important;
+            color: #4e73df !important;
+        }
+    </style>
+</head>
+
+<body id="page-top" style="font-family: 'Raleway', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; font-size: 16px;">
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Botão hambúrguer fixo no topo para mobile -->
+        <button class="btn btn-light shadow-sm d-md-none m-3 position-fixed rounded-circle text-primary"
+            id="sidebarToggleBtn" aria-label="Abrir menu"
+            style="top: 10px; left: 10px; z-index: 1100; width: 45px; height: 45px;">
+            <i id="menuIcon" class="fas fa-lg fa-bars"></i>
+        </button>
+
+        <div class="position-fixed w-100 h-100 bg-dark" id="sidebarOverlay"
+            style="display: none; top: 0; left: 0; opacity: 0.5; z-index: 1040;"></div>
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar"
+            style="padding: 70px 0px 200px 0px;">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('home') }}">
+                    <i class="fas fa-fw fa-home"></i>
+                    <span>Início</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/monitoramento">
+                    <i class="fas fa-fw fa-chart-area"></i>
+                    <span>Monitoramento das Adesões Municipais</span>
+                </a>
+            </li>
+            <!-- <li class="nav-item">
+                <a class="nav-link" href="/perfil">
+                    <i class="fas fa-fw fa-exchange-alt"></i>
+                    <span>Perfil dos Municípios Aderidos</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/indicadores">
+                    <i class="fas fa-fw fa-sliders-h"></i>
+                    <span>Relatório de Indicadores Municipais de Segurança Alimentar</span>
+                </a>
+            </li> -->
+        </ul>
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+
+                <!-- Header / Banner SISAN -->
+                <div class="bg-white shadow-sm">
+                    <img src="{{ url_for('static', filename='images/header_br_sem_fome.png') }}" alt="Cabeçalho"
+                        class="img-fluid w-100">
+                </div>
+
+                <!-- Main Content -->
+                <div class="container-fluid py-4">
+
+                    <!-- Título -->
+                    <div class="card shadow mb-4 border-0">
+                        <div
+                            class="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center text-white rounded bg-primary">
+                            <div class="py-2">
+                                <h4 class="card-title font-weight-bold mb-2">Monitoramento das Adesões Municipais</h4>
+                                <p class="card-text mb-0 text-white-100">
+                                    Acompanhe a evolução da adesão dos municípios ao Sisan, identifique territórios
+                                    avançados e pontos de atenção com visualizações em tempo real.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPIs -->
+                    <div class="row">
+                        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2 kpi-card">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total de
+                                        municípios</div>
+                                    <div id="kpi_totais" class="h5 mb-0 font-weight-bold text-gray-800">Carregando...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2 kpi-card">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Municípios
+                                        Aderidos</div>
+                                    <div id="kpi_com_adesao" class="h5 mb-0 font-weight-bold text-gray-800">
+                                        Carregando...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+                            <div class="card border-left-danger shadow h-100 py-2 kpi-card">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Sem Adesão ao
+                                        SISAN</div>
+                                    <div id="kpi_sem_adesao" class="h5 mb-0 font-weight-bold text-gray-800">
+                                        Carregando...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2 kpi-card">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Em Processo de
+                                        Adesão</div>
+                                    <div id="kpi_em_processo" class="h5 mb-0 font-weight-bold text-gray-800">
+                                        Carregando...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2 kpi-card">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Adesão
+                                        Suspensa</div>
+                                    <div id="kpi_suspensa" class="h5 mb-0 font-weight-bold text-gray-800">Carregando...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+                            <div class="card border-left-dark shadow h-100 py-2 kpi-card">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">Próxima
+                                        Resolução</div>
+                                    <div id="Chart_proxima" class="h6 mb-0 font-weight-bold text-gray-800">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <style>
+                        /* Mantém altura automática em tablets e celulares */
+                        .kpi-card {
+                            height: auto;
+                        }
+
+                        /* Aplica altura fixa de 180px apenas em monitores grandes */
+                        @media (min-width: 1200px) {
+                            .kpi-card {
+                                height: 180px;
+                            }
+                        }
+                    </style>
+
+
+                    <!-- Gráficos e Resoluções -->
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow h-100">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white">
+                                    <h6 class="m-0 font-weight-bold text-primary">Evolução das adesões ao Sisan</h6>
+                                    <button type="button" id="graf_barras_ano_download"
+                                        class="btn btn-sm btn-light border text-primary font-weight-bold">
+                                        <i class="fas fa-download fa-sm"></i> Baixar dados
+                                    </button>
+                                </div>
+                                <div class="card-body" style="height: 400px;">
+                                    <canvas id="Chart_barras_ano" class="w-100 h-100"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow h-100">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white">
+                                    <h6 class="m-0 font-weight-bold text-primary">Resoluções de adesões por ano</h6>
+                                    <button type="button" id="lista_com_adesao_download_resolucoes"
+                                        class="btn btn-sm btn-light border text-primary font-weight-bold">
+                                        <i class="fas fa-download fa-sm"></i> Baixar dados
+                                    </button>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <div class="mb-3">
+                                        <select id="select_ano_resolucao"
+                                            class="form-control form-control-sm border-secondary font-weight-bold text-secondary">
+                                            <option value="">Carregando anos...</option>
+                                        </select>
+                                    </div>
+                                    <div class="table-responsive flex-grow-1">
+                                        <table class="table table-bordered table-sm table-resolucoes mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="py-2 px-3">Número da Resolução <small
+                                                            class="text-white-50 font-weight-light"
+                                                            style="font-size: 0.75rem;">(Clique para ver
+                                                            municípios)</small></th>
+                                                    <th class="py-2 px-3 text-right" style="width: 220px;">Número de
+                                                        municípios aderidos</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tabela_resolucoes_body">
+                                                <tr>
+                                                    <td colspan="2" class="text-center text-muted py-4">Selecione um ano
+                                                        para visualizar as resoluções.</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td class="py-2 px-3">Total de municípios aderidos</td>
+                                                    <td id="tabela_resolucoes_total" class="py-2 px-3 text-right">0</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SESSÃO: Tabela de Nomes dos Municípios e Resoluções -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card shadow mb-4">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white">
+                                    <h6 class="m-0 font-weight-bold text-primary"><i class="fas fa-vial mr-2"></i>Nomes
+                                        dos municípios por UF e resolução</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-bordered table-sm mb-0" id="tabela_teste_municipios">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Nome do município (IBGE)</th>
+                                                    <th style="width: 100px;">UF</th>
+                                                    <th>Resolução / Detalhe</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="3" class="text-center text-muted py-3">Carregando...
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+
+
+                        <!-- BARRA LATERAL DE FILTROS -->
+                        <!-- Filtro de UF -->
+                        <!-- Card Principal Ocupando a Tela Toda -->
+                        <div class="card shadow-sm mx-2 my-3" style="width: calc(100% - 30px);">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="mb-0 font-weight-bold text-dark" style="font-size: 16px;">
+                                    <i class="fa fa-globe text-primary mr-2"></i> Monitoramento das Adesões Municipais
+                                </h5>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="row">
+
+                                    <!-- COLUNA DA ESQUERDA: Filtros Empilhados (UF e Município) -->
+                                    <div class="col-lg-3 mb-3 mb-lg-0">
+
+                                        <!-- Filtro de UF -->
+                                        <div class="card shadow-sm mb-3 border">
+                                            <div
+                                                class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-2">
+                                                <h6 class="mb-0 font-weight-bold" style="font-size: 13px;"><i
+                                                        class="fa fa-filter mr-1"></i> UF</h6>
+                                                <button type="button" id="btn_limpar_selecao_uf"
+                                                    class="btn btn-sm btn-light text-primary py-0 px-1"
+                                                    title="Limpar seleções" style="font-size: 11px; font-weight: bold;">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            </div>
+                                            <div class="card-body p-2">
+                                                <div class="input-group input-group-sm mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-white border-right-0"><i
+                                                                class="fa fa-search text-muted"
+                                                                style="font-size: 10px;"></i></span>
+                                                    </div>
+                                                    <input type="text" id="input_busca_uf"
+                                                        class="form-control form-control-sm border-left-0"
+                                                        placeholder="Pesquisar..." autocomplete="off">
+                                                </div>
+                                                <div id="container_filtro_ufs"
+                                                    style="max-height: 140px; overflow-y: auto; background: #f8f9fa; border: 1px solid #ced4da; padding: 6px; border-radius: 4px;">
+                                                    <!-- Preenchido via JS -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Filtro de Município -->
+                                        <div class="card shadow-sm border">
+                                            <div
+                                                class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-2">
+                                                <h6 class="mb-0 font-weight-bold" style="font-size: 13px;"><i
+                                                        class="fa fa-search mr-1"></i> Nome município</h6>
+                                                <button type="button" id="btn_limpar_selecao"
+                                                    class="btn btn-sm btn-light text-primary py-0 px-1"
+                                                    title="Limpar seleções" style="font-size: 11px; font-weight: bold;">
+                                                    <i class="fa fa-times"></i>
+                                                </button>
+                                            </div>
+                                            <div class="card-body p-2">
+                                                <div class="input-group input-group-sm mb-2">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-white border-right-0"><i
+                                                                class="fa fa-search text-muted"
+                                                                style="font-size: 10px;"></i></span>
+                                                    </div>
+                                                    <input type="text" id="input_busca_municipio"
+                                                        class="form-control form-control-sm border-left-0"
+                                                        placeholder="Pesquisar..." autocomplete="off">
+                                                </div>
+                                                <div id="container_filtro_municipios"
+                                                    style="max-height: 180px; overflow-y: auto; background: #f8f9fa; border: 1px solid #ced4da; padding: 6px; border-radius: 4px;">
+                                                    <!-- Preenchido via JS -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- COLUNA DA DIREITA: Mapa Ocupando o Espaço Restante -->
+                                    <div class="col-lg-9">
+                                        <div class="card shadow-sm border h-100">
+                                            <div
+                                                class="card-header bg-light d-flex justify-content-between align-items-center py-2">
+                                                <span class="font-weight-bold text-secondary"
+                                                    style="font-size: 13px;">Visualização das adesões no mapa</span>
+                                                <div>
+                                                    <span class="badge badge-success mr-2"
+                                                        style="font-size: 11px;">Verde: Aderido</span>
+                                                    <span class="badge badge-danger" style="font-size: 11px;">Vermelho:
+                                                        Não Aderido</span>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0 position-relative">
+                                                <!-- Elemento do Mapa com altura adequada para desktop -->
+                                                <div id="novo_mapa_georef" style="width: 100%; height: 520px;"></div>
+                                            </div>
+                                            <div class="card-footer bg-white text-muted text-right py-1"
+                                                style="font-size: 11px;">
+                                                <span id="badge_total_novo_mapa">Carregando dados...</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Script do Filtro checkbox Município-->
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            let marcadoresNovoMapa = {};
+                            let layerGroupNovoMapa = new L.LayerGroup();
+
+                            let novoMapa = L.map('novo_mapa_georef').setView([-14.2350, -51.9253], 4);
+
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 18,
+                                attribution: '&copy; OpenStreetMap contributors'
+                            }).addTo(novoMapa);
+
+                            layerGroupNovoMapa.addTo(novoMapa);
+
+                            console.log("--- INICIANDO BUSCA DE DADOS DO MAPA ---");
+
+                            fetch('/api/mapa_georef')
+                                .then(response => {
+                                    console.log("Status da resposta da API:", response.status);
+                                    return response.json();
+                                })
+                                .then(dados => {
+                                    console.log("Total de registros recebidos:", dados.length);
+                                    if (dados.length > 0) {
+                                        console.log("Exemplo do 1º registro retornado pela API:", dados[0]);
+                                    }
+
+                                    let totalAderidos = 0;
+                                    let containerFiltroMun = document.getElementById('container_filtro_municipios');
+                                    let containerFiltroUf = document.getElementById('container_filtro_ufs');
+
+                                    if (containerFiltroMun) containerFiltroMun.innerHTML = '';
+                                    if (containerFiltroUf) containerFiltroUf.innerHTML = '';
+
+                                    if (!Array.isArray(dados) || dados.length === 0) {
+                                        document.getElementById('badge_total_novo_mapa').innerText = "Nenhum dado encontrado.";
+                                        return;
+                                    }
+
+                                    // Coleta UFs únicas verificando 'UF' ou 'uf'
+                                    let ufsSet = new Set();
+                                    dados.forEach(mun => {
+                                        let siglaUf = mun.UF || mun.uf;
+                                        if (siglaUf) {
+                                            ufsSet.add(siglaUf.trim().toUpperCase());
+                                        }
+                                    });
+                                    let ufsArray = Array.from(ufsSet).sort();
+                                    console.log("UFs mapeadas com sucesso:", ufsArray);
+
+                                    // Popula os checkboxes de UF
+                                    ufsArray.forEach((uf, index) => {
+                                        if (containerFiltroUf) {
+                                            let wrapperUf = document.createElement('div');
+                                            wrapperUf.className = 'item-uf-wrapper mb-1';
+                                            wrapperUf.setAttribute('data-texto', uf.toLowerCase());
+
+                                            wrapperUf.innerHTML = `
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input filtro-novo-uf" value="${uf}" id="novo_uf_${index}">
+                            <label class="custom-control-label text-dark font-weight-normal" for="novo_uf_${index}" style="font-size: 12px; cursor: pointer;">
+                                ${uf}
+                            </label>
+                        </div>
+                    `;
+                                            containerFiltroUf.appendChild(wrapperUf);
+                                        }
+                                    });
+
+                                    // Ordena os municípios alfabeticamente
+                                    dados.sort((a, b) => {
+                                        let nomeA = (a.nome || '').toString();
+                                        let nomeB = (b.nome || '').toString();
+                                        return nomeA.localeCompare(nomeB);
+                                    });
+
+                                    dados.forEach((mun, index) => {
+                                        let lat = parseFloat(mun.lat);
+                                        let long = parseFloat(mun.long);
+                                        let nomeMun = mun.nome || 'Município';
+                                        let ufMun = (mun.UF || mun.uf || '').trim().toUpperCase();
+                                        let textoExibicao = nomeMun.includes(`(${ufMun})`) ? nomeMun : `${nomeMun} (${ufMun})`;
+                                        let chaveMun = textoExibicao.trim().toUpperCase();
+
+                                        if (mun.aderido) totalAderidos++;
+
+                                        if (!isNaN(lat) && !isNaN(long)) {
+                                            let statusAdesao = mun.aderido ? 'Sim' : 'Não';
+                                            let resolucao = mun.resolucao || 'Sem resolução';
+                                            let cor = mun.aderido ? '#28a745' : '#dc3545';
+
+                                            let conteudoPopup = `
+                        <div style="font-family: Arial, sans-serif; font-size: 13px; line-height: 1.4; min-width: 200px;">
+                            <b style="font-size: 14px; color: #0d6efd;">${textoExibicao}</b><br>
+                            <b>UF:</b> ${ufMun}<br>
+                            <b>Código IBGE:</b> ${mun.ibge || 'N/A'}<br>
+                            <b>Adesão SISAN:</b> ${statusAdesao}<br>
+                            <b>Resolução:</b> ${resolucao}
+                        </div>
+                    `;
+
+                                            let marker = L.circleMarker([lat, long], {
+                                                radius: 12,
+                                                fillColor: cor,
+                                                color: '#ffffff',
+                                                weight: 2,
+                                                opacity: 1,
+                                                fillOpacity: 0.95
+                                            }).bindPopup(conteudoPopup);
+
+                                            marcadoresNovoMapa[chaveMun] = { marker: marker, lat: lat, long: long, uf: ufMun };
+                                        }
+
+                                        if (containerFiltroMun) {
+                                            let wrapperDiv = document.createElement('div');
+                                            wrapperDiv.className = 'item-municipio-wrapper mb-1';
+                                            wrapperDiv.setAttribute('data-texto', textoExibicao.toLowerCase());
+                                            wrapperDiv.setAttribute('data-uf', ufMun);
+
+                                            wrapperDiv.innerHTML = `
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input filtro-novo-mun" value="${chaveMun}" id="novo_mun_${index}">
+                            <label class="custom-control-label text-dark font-weight-normal" for="novo_mun_${index}" style="font-size: 12px; cursor: pointer;">
+                                ${textoExibicao}
+                            </label>
+                        </div>
+                    `;
+                                            containerFiltroMun.appendChild(wrapperDiv);
+                                        }
+                                    });
+
+                                    // Eventos de mudança dos municípios
+                                    document.querySelectorAll('.filtro-novo-mun').forEach(chk => {
+                                        chk.addEventListener('change', atualizarFiltroMapa);
+                                    });
+
+                                    // Evento de mudança das UFs (seleciona automaticamente os municípios do estado)
+                                    document.querySelectorAll('.filtro-novo-uf').forEach(chk => {
+                                        chk.addEventListener('change', function () {
+                                            let ufSelecionada = this.value;
+                                            document.querySelectorAll('.item-municipio-wrapper').forEach(wrapper => {
+                                                let chkMun = wrapper.querySelector('.filtro-novo-mun');
+                                                if (wrapper.getAttribute('data-uf') === ufSelecionada && chkMun) {
+                                                    chkMun.checked = chk.checked;
+                                                }
+                                            });
+                                            atualizarFiltroMapa();
+                                        });
+                                    });
+
+                                    // Pesquisa de Município
+                                    let inputBuscaMun = document.getElementById('input_busca_municipio');
+                                    if (inputBuscaMun) {
+                                        inputBuscaMun.addEventListener('input', function () {
+                                            let termo = this.value.toLowerCase().trim();
+                                            document.querySelectorAll('.item-municipio-wrapper').forEach(item => {
+                                                let textoItem = item.getAttribute('data-texto');
+                                                item.style.display = textoItem.includes(termo) ? '' : 'none';
+                                            });
+                                        });
+                                    }
+
+                                    // Pesquisa de UF
+                                    let inputBuscaUf = document.getElementById('input_busca_uf');
+                                    if (inputBuscaUf) {
+                                        inputBuscaUf.addEventListener('input', function () {
+                                            let termo = this.value.toLowerCase().trim();
+                                            document.querySelectorAll('.item-uf-wrapper').forEach(item => {
+                                                let textoItem = item.getAttribute('data-texto');
+                                                item.style.display = textoItem.includes(termo) ? '' : 'none';
+                                            });
+                                        });
+                                    }
+
+                                    // Botão Limpar Seleção de Municípios
+                                    let btnLimparMun = document.getElementById('btn_limpar_selecao');
+                                    if (btnLimparMun) {
+                                        btnLimparMun.addEventListener('click', function () {
+                                            document.querySelectorAll('.filtro-novo-mun').forEach(chk => chk.checked = false);
+                                            document.querySelectorAll('.filtro-novo-uf').forEach(chk => chk.checked = false);
+                                            if (inputBuscaMun) {
+                                                inputBuscaMun.value = '';
+                                                document.querySelectorAll('.item-municipio-wrapper').forEach(item => item.style.display = '');
+                                            }
+                                            atualizarFiltroMapa();
+                                        });
+                                    }
+
+                                    // Botão Limpar Seleção de UF
+                                    let btnLimparUf = document.getElementById('btn_limpar_selecao_uf');
+                                    if (btnLimparUf) {
+                                        btnLimparUf.addEventListener('click', function () {
+                                            document.querySelectorAll('.filtro-novo-uf').forEach(chk => chk.checked = false);
+                                            document.querySelectorAll('.filtro-novo-mun').forEach(chk => chk.checked = false);
+                                            if (inputBuscaUf) {
+                                                inputBuscaUf.value = '';
+                                                document.querySelectorAll('.item-uf-wrapper').forEach(item => item.style.display = '');
+                                            }
+                                            atualizarFiltroMapa();
+                                        });
+                                    }
+
+                                    let badgeEl = document.getElementById('badge_total_novo_mapa');
+                                    if (badgeEl) {
+                                        badgeEl.innerText = `Total Exibido: ${dados.length.toLocaleString('pt-BR')} (${totalAderidos.toLocaleString('pt-BR')} Aderidos)`;
+                                    }
+                                })
+                                .catch(error => console.error("Erro crítico ao carregar dados do mapa:", error));
+
+                            function atualizarFiltroMapa() {
+                                layerGroupNovoMapa.clearLayers();
+                                let bounds = [];
+
+                                document.querySelectorAll('.filtro-novo-mun').forEach(chk => {
+                                    let chave = chk.value;
+                                    if (chk.checked && marcadoresNovoMapa[chave]) {
+                                        let item = marcadoresNovoMapa[chave];
+                                        layerGroupNovoMapa.addLayer(item.marker);
+                                        bounds.push([item.lat, item.long]);
+                                    }
+                                });
+
+                                if (bounds.length > 0) {
+                                    if (bounds.length === 1) {
+                                        novoMapa.setView(bounds[0], 9);
+                                    } else {
+                                        novoMapa.fitBounds(bounds, { padding: [50, 50], maxZoom: 10 });
+                                    }
+                                } else {
+                                    novoMapa.setView([-14.2350, -51.9253], 4);
+                                }
+                            }
+                        });
+                    </script>
+                    <!-- Fim -->
+
+                    <!-- SESSÃO: Mapa Geográfico de Adesões por UF com Nomes dos Municípios -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card shadow mb-4">
+                                <div
+                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-white">
+                                    <h6 class="m-0 font-weight-bold text-primary"><i
+                                            class="fas fa-map-marked-alt mr-2"></i>Adesão por mapa geográfico e UF</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted small">Clique nos marcadores do mapa para visualizar o resumo e
+                                        a lista completa dos municípios aderidos em cada estado.</p>
+                                    <div id="mapa_adesoes" style="height: 500px; width: 100%; border-radius: 5px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mapa Dinâmico                  -->
+
+                    <!-- SESSÃO: Novo Mapa Georreferenciado por Coordenadas -->
+
+                    <!-- Mapa com funcionalidades de filtro -->
+                    <script>
+                        let marcadoresMapa = {};
+                        let tomSelectInstance = null;
+
+                        let mapa = L.map('mapa_georef_coordenadas').setView([-14.2350, -51.9253], 4);
+
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 18,
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(mapa);
+
+                        fetch('/api/mapa_georef')
+                            .then(response => response.json())
+                            .then(dados => {
+                                let totalAderidos = 0;
+                                let selectElement = document.getElementById('select_municipio');
+
+                                if (selectElement) {
+                                    selectElement.innerHTML = '<option value="">Selecione ou digite um município...</option>';
+                                }
+
+                                if (!Array.isArray(dados) || dados.length === 0) return;
+
+                                dados.sort((a, b) => {
+                                    let nomeA = (a.nome || '').toString();
+                                    let nomeB = (b.nome || '').toString();
+                                    return nomeA.localeCompare(nomeB);
+                                });
+
+                                dados.forEach(mun => {
+                                    let lat = parseFloat(mun.lat);
+                                    let long = parseFloat(mun.long);
+
+                                    let nomeMun = mun.nome || 'Município';
+                                    let ufMun = mun.uf || '';
+
+                                    let textoExibicao = nomeMun.includes(`(${ufMun})`) ? nomeMun : `${nomeMun} (${ufMun})`;
+
+                                    if (!isNaN(lat) && !isNaN(long)) {
+                                        if (mun.aderido) totalAderidos++;
+
+                                        let statusAdesao = mun.aderido ? 'Sim' : 'Não';
+                                        let resolucao = mun.resolucao || 'Sem resolução';
+
+                                        let conteudoPopup = `
+                    <div style="font-family: Arial, sans-serif; font-size: 13px; line-height: 1.4; min-width: 220px;">
+                        <b style="font-size: 14px; color: #0d6efd;">${textoExibicao}</b><br>
+                        <b>Adesão SISAN:</b> ${statusAdesao}<br>
+                        <b>Resolução:</b> ${resolucao}
+                    </div>
+                `;
+
+                                        let marker = L.marker([lat, long]).bindPopup(conteudoPopup).addTo(mapa);
+
+                                        let chaveMun = textoExibicao.trim().toUpperCase();
+                                        marcadoresMapa[chaveMun] = { lat: lat, long: long, marker: marker };
+                                    }
+
+                                    if (selectElement) {
+                                        let chaveMun = textoExibicao.trim().toUpperCase();
+
+                                        let option = document.createElement('option');
+                                        option.value = chaveMun;
+                                        option.textContent = textoExibicao;
+                                        selectElement.appendChild(option);
+                                    }
+                                });
+
+                                // Inicializa o Tom Select com escuta de evento integrada (onChange)
+                                if (selectElement && !tomSelectInstance) {
+                                    tomSelectInstance = new TomSelect("#select_municipio", {
+                                        create: false,
+                                        sortField: {
+                                            field: "text",
+                                            direction: "asc"
+                                        },
+                                        maxOptions: null,
+                                        onChange: function (value) {
+                                            localizarMunicipio(value);
+                                        }
+                                    });
+                                }
+
+                                let badgeEl = document.getElementById('badge_total_georef');
+                                if (badgeEl) {
+                                    badgeEl.innerText = `Total Exibido: ${dados.length.toLocaleString('pt-BR')} (${totalAderidos.toLocaleString('pt-BR')} Aderidos)`;
+                                }
+                            })
+                            .catch(error => console.error("Erro ao carregar dados:", error));
+
+                        // Vincula o botão "Localizar" para pegar o valor atual do Tom Select
+                        document.getElementById('btn_buscar_mun').addEventListener('click', function () {
+                            if (tomSelectInstance) {
+                                let valorAtual = tomSelectInstance.getValue();
+                                localizarMunicipio(valorAtual);
+                            }
+                        });
+
+                        // Função centralizada que move o mapa e abre o popup
+                        function localizarMunicipio(municipioSelecionado) {
+                            if (!municipioSelecionado) return;
+
+                            if (marcadoresMapa[municipioSelecionado]) {
+                                let item = marcadoresMapa[municipioSelecionado];
+                                mapa.setView([item.lat, item.long], 10);
+                                item.marker.openPopup();
+                            }
+                        }
+                    </script>
+
+                    <!-- Script do leaf -->
+
+                    <script>
+                        let marcadoresMapa = {};
+                        let dadosGlobais = [];
+
+                        let mapa = L.map('mapa_georef_coordenadas').setView([-14.2350, -51.9253], 4);
+
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 18,
+                            attribution: '&copy; OpenStreetMap contributors'
+                        }).addTo(mapa);
+
+                        let layerGroup = L.layerGroup().addTo(mapa);
+
+                        fetch('/api/mapa_georef')
+                            .then(response => response.json())
+                            .then(dados => {
+                                dadosGlobais = dados;
+                                let totalAderidos = 0;
+                                let containerFiltro = document.getElementById('container_filtro_municipios'); // ID da div onde vão ficar os checkboxes na barra lateral
+
+                                if (containerFiltro) {
+                                    containerFiltro.innerHTML = '';
+                                }
+
+                                if (!Array.isArray(dados) || dados.length === 0) return;
+
+                                // Ordena alfabeticamente
+                                dados.sort((a, b) => {
+                                    let nomeA = (a.nome || '').toString();
+                                    let nomeB = (b.nome || '').toString();
+                                    return nomeA.localeCompare(nomeB);
+                                });
+
+                                dados.forEach((mun, index) => {
+                                    let lat = parseFloat(mun.lat);
+                                    let long = parseFloat(mun.long);
+                                    let nomeMun = mun.nome || 'Município';
+                                    let ufMun = mun.uf || '';
+                                    let textoExibicao = nomeMun.includes(`(${ufMun})`) ? nomeMun : `${nomeMun} (${ufMun})`;
+                                    let chaveMun = textoExibicao.trim().toUpperCase();
+
+                                    if (mun.aderido) totalAderidos++;
+
+                                    // Cria o marcador no mapa se tiver coordenadas válidas
+                                    if (!isNaN(lat) && !isNaN(long)) {
+                                        let statusAdesao = mun.aderido ? 'Sim' : 'Não';
+                                        let resolucao = mun.resolucao || 'Sem resolução';
+                                        let cor = mun.aderido ? 'green' : 'red';
+
+                                        let conteudoPopup = `
+                    <div style="font-family: Arial, sans-serif; font-size: 13px; line-height: 1.4; min-width: 220px;">
+                        <b style="font-size: 14px; color: #0d6efd;">${textoExibicao}</b><br>
+                        <b>Adesão SISAN:</b> ${statusAdesao}<br>
+                        <b>Resolução:</b> ${resolucao}
+                    </div>
+                `;
+
+                                        let marker = L.circleMarker([lat, long], {
+                                            radius: 5,
+                                            fillColor: cor,
+                                            color: '#000',
+                                            weight: 0.5,
+                                            opacity: 1,
+                                            fillOpacity: 0.8
+                                        }).bindPopup(conteudoPopup);
+
+                                        marcadoresMapa[chaveMun] = { marker: marker, lat: lat, long: long, aderido: mun.aderido };
+                                        layerGroup.addLayer(marker);
+                                    }
+
+                                    // Cria o checkbox na barra lateral (igualzinho ao print do Qlik)
+                                    if (containerFiltro) {
+                                        let divCheck = document.createElement('div');
+                                        divCheck.className = 'form-check mb-1';
+                                        divCheck.innerHTML = `
+                    <input class="form-check-input filtro-mun-check" type="checkbox" value="${chaveMun}" id="mun_${index}" checked>
+                    <label class="form-check-label" for="mun_${index}" style="font-size: 12px; cursor: pointer;">
+                        ${textoExibicao}
+                    </label>
+                `;
+                                        containerFiltro.appendChild(divCheck);
+                                    }
+                                });
+
+                                // Adiciona o evento de mudança em massa nos checkboxes
+                                document.querySelectorAll('.filtro-mun-check').forEach(chk => {
+                                    chk.addEventListener('change', atualizarFiltroMapa);
+                                });
+
+                                let badgeEl = document.getElementById('badge_total_georef');
+                                if (badgeEl) {
+                                    badgeEl.innerText = `Total Exibido: ${dados.length.toLocaleString('pt-BR')} (${totalAderidos.toLocaleString('pt-BR')} Aderidos)`;
+                                }
+                            })
+                            .catch(error => console.error("Erro ao carregar dados:", error));
+
+                        // Função que atualiza o mapa conforme os checkboxes marcados
+                        function atualizarFiltroMapa() {
+                            layerGroup.clearLayers(); // Limpa os marcadores atuais do mapa
+
+                            document.querySelectorAll('.filtro-mun-check').forEach(chk => {
+                                let chave = chk.value;
+                                if (chk.checked && marcadoresMapa[chave]) {
+                                    layerGroup.addLayer(marcadoresMapa[chave].marker); // Reinsere apenas os marcados
+                                }
+                            });
+                        }
+                    </script>
+                    <!-- Fim Mapa Dinâmico -->
+
+                    <!-- Busca com IA -->
+                    <!-- ========================================================================= -->
+                    <!-- SEÇÃO DE MONITORAMENTO INTELIGENTE POR IA -->
+                    <!-- ========================================================================= -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-robot mr-2"></i> Consulta Inteligente por IA (Sisan) - Beta v1</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Digite o que você deseja monitorar em linguagem natural (ex:
+                                <em>"Quero as resoluções de 2025 com os nomes dos municípios"</em>):
+                            </p>
+                            <div class="form-group">
+                                <textarea id="prompt_ia_input" class="form-control" rows="2"
+                                    placeholder="O que você deseja analisar?"></textarea>
+                            </div>
+                            <button id="btn_gerar_tabela_ia" class="btn btn-success">
+                                <i class="fas fa-magic mr-1"></i> Gerar Tabela com IA
+                            </button>
+
+                            <!-- Área de Loading -->
+                            <div id="loading_ia" class="text-center my-3" style="display: none;">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">Carregando...</span>
+                                </div>
+                                <p class="text-muted small mt-1">A IA está processando os dados e cruzando as
+                                    informações...</p>
+                            </div>
+
+                            <!-- Área onde a tabela será injetada dinamicamente -->
+                            <div id="resultado_tabela_ia_container" class="mt-4" style="display: none;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="font-weight-bold text-dark mb-0" id="titulo_tabela_ia">Resultado da
+                                        Consulta</h6>
+                                    <button id="btn_baixar_excel_ia" class="btn btn-sm btn-outline-success">
+                                        <i class="fas fa-file-excel mr-1"></i> Baixar Excel
+                                    </button>
+                                </div>
+                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                    <table class="table table-bordered table-striped table-sm bg-white"
+                                        id="tabela_gerada_ia">
+                                        <thead class="thead-light" id="tabela_ia_thead"></thead>
+                                        <tbody id="tabela_ia_tbody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Scripst IA -->
+
+                        <style>
+                            .resultado-tabela,
+                            .table-container {
+                                max-height: 500px !important;
+                                /* Aumente este valor ou remova para exibir tudo */
+                                overflow-y: auto !important;
+                            }
+                        </style>
+                        <script>
+                            let dadosTabelaIaAtual = null;
+
+                            document.getElementById('btn_gerar_tabela_ia').addEventListener('click', function () {
+                                const promptTexto = document.getElementById('prompt_ia_input').value.trim();
+                                if (!promptTexto) {
+                                    alert('Por favor, digite o que você deseja monitorar.');
+                                    return;
+                                }
+
+                                const divLoading = document.getElementById('loading_ia');
+                                const containerTabela = document.getElementById('resultado_tabela_ia_container');
+
+                                divLoading.style.display = 'block';
+                                containerTabela.style.display = 'none';
+
+                                fetch('/api/consulta-ia', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ prompt: promptTexto })
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        divLoading.style.display = 'none';
+                                        if (data.erro) {
+                                            alert('Erro ao processar com a IA: ' + data.erro);
+                                            return;
+                                        }
+
+                                        dadosTabelaIaAtual = data;
+                                        const thead = document.getElementById('tabela_ia_thead');
+                                        const tbody = document.getElementById('tabela_ia_tbody');
+
+                                        thead.innerHTML = '';
+                                        tbody.innerHTML = '';
+
+                                        // Monta o cabeçalho dinamicamente
+                                        let trHead = '<tr>';
+                                        data.colunas.forEach(coluna => {
+                                            trHead += `<th>${coluna}</th>`;
+                                        });
+                                        trHead += '</tr>';
+                                        thead.innerHTML = trHead;
+
+                                        // Monta as linhas dinamicamente
+                                        if (data.linhas && data.linhas.length > 0) {
+                                            data.linhas.forEach(linha => {
+                                                let trBody = '<tr>';
+                                                linha.forEach(celula => {
+                                                    trBody += `<td>${celula}</td>`;
+                                                });
+                                                trBody += '</tr>';
+                                                tbody.innerHTML += trBody;
+                                            });
+                                        } else {
+                                            tbody.innerHTML = `<tr><td colspan="${data.colunas.length}" class="text-center text-muted">Nenhum dado encontrado para esta consulta.</td></tr>`;
+                                        }
+
+                                        containerTabela.style.display = 'block';
+                                    })
+                                    .catch(error => {
+                                        divLoading.style.display = 'none';
+                                        console.error('Erro na requisição:', error);
+                                        alert('Ocorreu um erro de comunicação com o servidor.');
+                                    });
+                            });
+
+                            // Funcionalidade para baixar a tabela gerada pela IA em Excel (aproveitando o SheetJS já importado)
+                            document.getElementById('btn_baixar_excel_ia').addEventListener('click', function () {
+                                if (!dadosTabelaIaAtual || !dadosTabelaIaAtual.linhas) return;
+
+                                // Converte os dados estruturados pelo JSON da IA em formato de array de objetos para o SheetJS
+                                const rows = dadosTabelaIaAtual.linhas.map(linha => {
+                                    let obj = {};
+                                    dadosTabelaIaAtual.colunas.forEach((col, index) => {
+                                        obj[col] = linha[index];
+                                    });
+                                    return obj;
+                                });
+
+                                const worksheet = XLSX.utils.json_to_sheet(rows);
+                                const workbook = XLSX.utils.book_new();
+                                XLSX.utils.book_append_sheet(workbook, worksheet, "Consulta_IA");
+                                XLSX.writeFile(workbook, "consulta_sisan_ia.xlsx");
+                            });
+                        </script>
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- Script para Inicializar o Mapa Georreferenciado -->
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var container = L.DomUtil.get('mapa_georef_coordenadas');
+                    if (container != null && container._leaflet_id != undefined) {
+                        container._leaflet_id = null;
+                    }
+
+                    // Inicializa o mapa centralizado no Brasil
+                    var mapaGeo = L.map('mapa_georef_coordenadas').setView([-15.78, -47.93], 4);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '© OpenStreetMap contributors'
+                    }).addTo(mapaGeo);
+
+                    fetch('/api/mapa_georef')
+                        .then(r => r.json())
+                        .then(data => {
+                            let totalMapeado = data.length;
+                            let totalAderidosGeo = 0;
+
+                            data.forEach(item => {
+                                if (item.aderido) {
+                                    totalAderidosGeo++;
+                                }
+
+                                // Define a cor do marcador com base no status
+                                let corHex = item.aderido ? "#1cc88a" : "#e74a3b"; // Verde para Aderido, Vermelho para Não Aderido
+                                let statusTexto = item.aderido ? "<span class='text-success font-weight-bold'>Aderido (Sim)</span>" : "<span class='text-danger font-weight-bold'>Não Aderido (Não)</span>";
+
+                                // Cria um marcador circular personalizado
+                                let circuloMarker = L.circleMarker([item.lat, item.long], {
+                                    radius: 6,
+                                    fillColor: corHex,
+                                    color: "#fff",
+                                    weight: 1,
+                                    opacity: 1,
+                                    fillOpacity: 0.8
+                                });
+
+                                circuloMarker.bindPopup(`
+                        <b>${item.nome}</b><br>
+                        Status: ${statusTexto}<br>
+                        Resolução: <b>${item.resolucao}</b>
+                    `);
+
+                                circuloMarker.addTo(mapaGeo);
+                            });
+
+                            // Atualiza o badge de resumo
+                            const badgeGeo = document.getElementById('badge_total_georef');
+                            if (badgeGeo) {
+                                badgeGeo.innerText = `Total Exibido: ${totalMapeado.toLocaleString('pt-BR')} (${totalAderidosGeo.toLocaleString('pt-BR')} Aderidos)`;
+                            }
+
+                            // Legenda do Mapa
+                            var legendaGeo = L.control({ position: 'bottomright' });
+                            legendaGeo.onAdd = function (map) {
+                                var div = L.DomUtil.create('div', 'info legend bg-white p-2 shadow-sm rounded');
+                                div.innerHTML += '<i style="background:#1cc88a; width:14px; height:14px; display:inline-block; border-radius:50%; margin-right:5px;"></i> Aderido (Sim)<br>';
+                                div.innerHTML += '<i style="background:#e74a3b; width:14px; height:14px; display:inline-block; border-radius:50%; margin-right:5px;"></i> Não Aderido (Não)<br>';
+                                return div;
+                            };
+                            legendaGeo.addTo(mapaGeo);
+
+                            setTimeout(function () {
+                                mapaGeo.invalidateSize();
+                            }, 200);
+
+                        })
+                        .catch(error => console.error("Erro ao carregar o mapa georreferenciado:", error));
+                });
+            </script>
+
+
+
+            <!-- Footer -->
+            <footer>
+                <img src="{{ url_for('static', filename='images/footer_br_sem_fome.png') }}" alt="Rodapé"
+                    class="img-fluid w-100">
+            </footer>
+
+        </div>
+    </div>
+
+    <!-- Modal para exibir municípios da resolução -->
+    <div class="modal fade" id="modalMunicipiosResolucao" tabindex="-1" role="dialog"
+        aria-labelledby="modalMunicipiosResolucaoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title font-weight-bold" id="modalMunicipiosResolucaoLabel">Resolução</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalResInfo" class="text-muted font-weight-bold mb-3"></p>
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-bordered table-sm mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Nome do município (IBGE)</th>
+                                    <th style="width: 100px;">UF</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modal_municipios_tbody">
+                                <!-- Preenchido dinamicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" id="btnBaixarExcelModal" class="btn btn-success">
+                        <i class="fas fa-file-excel mr-1"></i> Baixar Planilha
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll to Top -->
+    <a class="scroll-to-top rounded position-fixed bg-secondary text-white text-center" href="#page-top"
+        aria-label="Voltar ao topo"
+        style="z-index: 1060; bottom: 1rem; right: 1rem; width: 2.75rem; height: 2.75rem; line-height: 2.75rem;">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Scripts de Lógica, Modal e Exportação Excel -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        let dadosGlobaisApi = null;
+        let resolucaoAtualSelecionada = null;
+        let mapaLeaflet = null;
+
+        // Coordenadas aproximadas dos centros dos estados brasileiros para o mapa
+        const coordenadasUfs = {
+            'AC': [-9.02, -70.81], 'AL': [-9.62, -36.82], 'AP': [1.41, -51.77],
+            'AM': [-3.47, -65.10], 'BA': [-12.96, -41.73], 'CE': [-5.20, -39.53],
+            'DF': [-15.83, -47.86], 'ES': [-19.19, -40.34], 'GO': [-15.94, -49.86],
+            'MA': [-5.42, -45.44], 'MT': [-12.64, -55.42], 'MS': [-20.51, -54.54],
+            'MG': [-18.10, -44.38], 'PA': [-3.79, -52.48], 'PB': [-7.28, -36.72],
+            'PR': [-24.89, -51.55], 'PE': [-8.28, -35.07], 'PI': [-7.71, -42.72],
+            'RJ': [-22.84, -43.15], 'RN': [-5.81, -36.59], 'RS': [-30.01, -51.22],
+            'RO': [-11.22, -62.80], 'RR': [2.73, -62.05], 'SC': [-27.33, -49.44],
+            'SP': [-22.19, -48.79], 'SE': [-10.57, -37.45], 'TO': [-10.25, -48.25]
+        };
+
+        function inicializarMapa() {
+            if (mapaLeaflet) {
+                mapaLeaflet.remove();
+            }
+            mapaLeaflet = L.map('mapa_adesoes').setView([-14.2350, -51.9253], 4);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(mapaLeaflet);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            inicializarMapa();
+
+            // Carrega dados gerais da API
+            fetch('/api/dados')
+                .then(response => response.json())
+                .then(data => {
+                    dadosGlobaisApi = data;
+
+                    // KPIs básicos
+                    if (document.getElementById('kpi_totais')) document.getElementById('kpi_totais').innerText = (data.total || 0).toLocaleString('pt-BR');
+                    if (document.getElementById('kpi_com_adesao')) document.getElementById('kpi_com_adesao').innerText = (data.aderidos || 0).toLocaleString('pt-BR');
+                    if (document.getElementById('kpi_sem_adesao')) document.getElementById('kpi_sem_adesao').innerText = (data.sem_adesao || 0).toLocaleString('pt-BR');
+                    if (document.getElementById('kpi_em_processo')) document.getElementById('kpi_em_processo').innerText = (data.em_processo || 0).toLocaleString('pt-BR');
+                    if (document.getElementById('kpi_suspensa')) document.getElementById('kpi_suspensa').innerText = (data.suspensa || 0).toLocaleString('pt-BR');
+
+                    // Próxima Resolução
+                    if (document.getElementById('Chart_proxima')) {
+                        const proximaVal = data.proxima_resolucao || data.proxima || data.proxima_res || '-';
+                        document.getElementById('Chart_proxima').innerText = proximaVal;
+                    }
+
+                    // Gráfico de Barras (Evolução)
+                    if (document.getElementById('Chart_barras_ano')) {
+                        const ctxEvolucao = document.getElementById('Chart_barras_ano').getContext('2d');
+                        new Chart(ctxEvolucao, {
+                            type: 'bar',
+                            data: {
+                                labels: data.evolucao_anos || [],
+                                datasets: [{
+                                    label: 'Municípios Aderidos',
+                                    data: data.evolucao_valores || [],
+                                    backgroundColor: '#1cc88a',
+                                    borderColor: '#17a673',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                responsive: true,
+                                scales: { y: { beginAtZero: true } },
+                                plugins: { legend: { display: false } }
+                            }
+                        });
+                    }
+
+                    // Tabela e Select de Resoluções por Ano
+                    const tabelaResolucoes = data.tabela_resolucoes || data.resolucoes_por_ano || data.anos_resolucoes;
+
+                    if (tabelaResolucoes && tabelaResolucoes.length > 0) {
+                        const selectAno = document.getElementById('select_ano_resolucao');
+                        const tbodyRes = document.getElementById('tabela_resolucoes_body');
+                        const totalRes = document.getElementById('tabela_resolucoes_total');
+
+                        selectAno.innerHTML = '';
+                        tabelaResolucoes.forEach((item, index) => {
+                            const option = document.createElement('option');
+                            option.value = index;
+                            option.textContent = item.ano;
+                            selectAno.appendChild(option);
+                        });
+
+                        const ultimoIndice = tabelaResolucoes.length - 1;
+                        selectAno.value = ultimoIndice;
+
+                        function renderizarTabelaAno(indice) {
+                            const dadosAno = tabelaResolucoes[indice];
+                            tbodyRes.innerHTML = '';
+                            if (!dadosAno || !dadosAno.resolucoes || dadosAno.resolucoes.length === 0) {
+                                tbodyRes.innerHTML = '<tr><td colspan="2" class="text-center text-muted py-3">Nenhuma resolução encontrada.</td></tr>';
+                                totalRes.innerText = '0';
+                                return;
+                            }
+                            dadosAno.resolucoes.forEach(res => {
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `
+                                    <td class="py-2 px-3">
+                                        <a href="#" class="text-primary font-weight-normal text-decoration-none link-res-detalhes" data-ano="${dadosAno.ano}" data-res-nome="${res.resolucao}">
+                                            <i class="fas fa-eye mr-1 text-info"></i> ${res.resolucao}
+                                        </a>
+                                    </td>
+                                    <td class="py-2 px-3 text-right font-weight-bold text-primary">${(res.quantidade || 0).toLocaleString('pt-BR')}</td>
+                                `;
+                                tbodyRes.appendChild(tr);
+                            });
+                            totalRes.innerText = (dadosAno.total_ano || 0).toLocaleString('pt-BR');
+                        }
+
+                        renderizarTabelaAno(ultimoIndice);
+                        selectAno.addEventListener('change', function () {
+                            renderizarTabelaAno(parseInt(this.value));
+                        });
+                    } else {
+                        const selectAno = document.getElementById('select_ano_resolucao');
+                        if (selectAno) {
+                            selectAno.innerHTML = '<option value="">Nenhum ano disponível</option>';
+                        }
+                    }
+
+                    // Preenchimento da Tabela de Municípios abaixo
+                    const tbodyTeste = document.querySelector('#tabela_teste_municipios tbody');
+                    if (tbodyTeste) {
+                        let listaMunTest = [];
+                        const tabRes = data.tabela_resolucoes || data.resolucoes_por_ano || data.anos_resolucoes;
+                        if (tabRes) {
+                            tabRes.forEach(itemAno => {
+                                if (itemAno.resolucoes) {
+                                    itemAno.resolucoes.forEach(res => {
+                                        const listaMuniRes = res.municipios || res.lista_municipios || res.municipios_aderidos || res.itens || res.lista || [];
+
+                                        if (listaMuniRes && listaMuniRes.length > 0) {
+                                            listaMuniRes.forEach(m => {
+                                                const nomeMun = m["Nome do município (IBGE)"] || m.nome_ibge || m.nome || m.municipio || '';
+                                                const codigoMun = m["Código do Município"] || m.ibge || m.codigo_ibge || '';
+                                                const nomeCompleto = codigoMun ? `${nomeMun} (${codigoMun})` : nomeMun;
+
+                                                listaMunTest.push({
+                                                    nomeCompleto: nomeCompleto,
+                                                    uf: m.UF || m.uf || '-',
+                                                    detalhe: `${res.resolucao} (${itemAno.ano})`
+                                                });
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                        tbodyTeste.innerHTML = '';
+                        if (listaMunTest.length > 0) {
+                            listaMunTest.slice(0, 100).forEach(item => {
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `<td>${item.nomeCompleto}</td><td>${item.uf}</td><td>${item.detalhe}</td>`;
+                                tbodyTeste.appendChild(tr);
+                            });
+                        } else {
+                            tbodyTeste.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-3">Nenhum município retornado na estrutura de dados.</td></tr>';
+                        }
+                    }
+
+                    // Renderizar Marcadores no Mapa Leaflet com os nomes dos municípios agrupados por UF no Popup
+                    if (data.status_por_uf && mapaLeaflet) {
+                        const municipiosPorUfMapa = {};
+                        const tabRes = data.tabela_resolucoes || data.resolucoes_por_ano || data.anos_resolucoes;
+
+                        if (tabRes) {
+                            tabRes.forEach(itemAno => {
+                                if (itemAno.resolucoes) {
+                                    itemAno.resolucoes.forEach(res => {
+                                        const listaMuniRes = res.municipios || res.lista_municipios || res.municipios_aderidos || [];
+                                        listaMuniRes.forEach(m => {
+                                            const nomeMun = m["Nome do município (IBGE)"] || m.nome_ibge || m.nome || m.municipio || '';
+                                            const ufMun = (m.UF || m.uf || '').trim().toUpperCase();
+                                            if (ufMun && nomeMun) {
+                                                if (!municipiosPorUfMapa[ufMun]) municipiosPorUfMapa[ufMun] = new Set();
+                                                municipiosPorUfMapa[ufMun].add(nomeMun);
+                                            }
+                                        });
+                                    });
+                                }
+                            });
+                        }
+
+                        for (const [uf, info] of Object.entries(data.status_por_uf)) {
+                            if (coordenadasUfs[uf]) {
+                                const coords = coordenadasUfs[uf];
+                                const raio = Math.max(Math.sqrt(info.aderidos) * 3, 8);
+
+                                const listaNomes = municipiosPorUfMapa[uf] ? Array.from(municipiosPorUfMapa[uf]).sort() : [];
+
+                                let htmlMunicipios = '<p class="text-muted mb-1">Nenhum município detalhado na API.</p>';
+                                if (listaNomes.length > 0) {
+                                    htmlMunicipios = `
+                                        <div style="max-height: 150px; overflow-y: auto; text-align: left; padding-right: 5px;" class="small">
+                                            <ul class="pl-3 mb-0">
+                                                ${listaNomes.map(n => `<li>${n}</li>`).join('')}
+                                            </ul>
+                                        </div>
+                                    `;
+                                }
+
+                                const circleMarker = L.circleMarker(coords, {
+                                    radius: raio,
+                                    fillColor: '#1cc88a',
+                                    color: '#13855c',
+                                    weight: 1,
+                                    opacity: 1,
+                                    fillOpacity: 0.7
+                                }).addTo(mapaLeaflet);
+
+                                circleMarker.bindPopup(`
+                                    <div style="min-width: 220px;">
+                                        <h6 class="font-weight-bold text-primary mb-1">Estado: ${uf}</h6>
+                                        <p class="mb-1 small">Aderidos: <b>${info.aderidos}</b> de ${info.total}</p>
+                                        <hr class="my-1">
+                                        <p class="font-weight-bold small mb-1">Municípios Aderidos:</p>
+                                        ${htmlMunicipios}
+                                    </div>
+                                `);
+                            }
+                        }
+                    }
+                })
+                .catch(error => console.error('Erro ao carregar dados gerais:', error));
+
+            // Download geral: Evolução das adesões
+            document.getElementById('graf_barras_ano_download').addEventListener('click', function () {
+                if (!dadosGlobaisApi || !dadosGlobaisApi.evolucao_anos) {
+                    alert('Dados de evolução ainda não foram carregados.');
+                    return;
+                }
+                const rows = dadosGlobaisApi.evolucao_anos.map((ano, index) => ({
+                    'Ano': ano,
+                    'Municípios Aderidos': dadosGlobaisApi.evolucao_valores[index]
+                }));
+
+                const worksheet = XLSX.utils.json_to_sheet(rows);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Evolucao_Adesoes");
+                XLSX.writeFile(workbook, "evolucao_adesoes_sisan.xlsx");
+            });
+
+            // Download geral: Todas as resoluções
+            document.getElementById('lista_com_adesao_download_resolucoes').addEventListener('click', function () {
+                const tabRes = dadosGlobaisApi ? (dadosGlobaisApi.tabela_resolucoes || dadosGlobaisApi.resolucoes_por_ano || dadosGlobaisApi.anos_resolucoes) : null;
+                if (!tabRes) {
+                    alert('Dados de resoluções ainda não foram carregados.');
+                    return;
+                }
+                const rows = [];
+                tabRes.forEach(item => {
+                    if (item.resolucoes) {
+                        item.resolucoes.forEach(res => {
+                            rows.push({
+                                'Ano': item.ano,
+                                'Número da Resolução': res.resolucao,
+                                'Número de Municípios Aderidos': res.quantidade
+                            });
+                        });
+                    }
+                });
+
+                const worksheet = XLSX.utils.json_to_sheet(rows);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Resolocoes_Adesoes");
+                XLSX.writeFile(workbook, "resolucoes_adesoes_sisan.xlsx");
+            });
+
+            // Abrir Modal ao clicar na Resolução
+            document.addEventListener('click', function (e) {
+                const target = e.target.closest('.link-res-detalhes');
+                if (target) {
+                    e.preventDefault();
+                    const ano = target.getAttribute('data-ano');
+                    const resNome = target.getAttribute('data-res-nome');
+
+                    const tabRes = dadosGlobaisApi ? (dadosGlobaisApi.tabela_resolucoes || dadosGlobaisApi.resolucoes_por_ano || dadosGlobaisApi.anos_resolucoes) : null;
+                    if (!tabRes) return;
+
+                    const dadosAno = tabRes.find(item => item.ano == ano);
+                    if (!dadosAno || !dadosAno.resolucoes) return;
+
+                    const resolucaoObj = dadosAno.resolucoes.find(r => r.resolucao === resNome);
+                    if (!resolucaoObj) return;
+
+                    resolucaoAtualSelecionada = { ano, resNome, resolucaoObj };
+
+                    document.getElementById('modalMunicipiosResolucaoLabel').innerText = resNome;
+                    document.getElementById('modalResInfo').innerText = `Ano: ${ano} | Total de Municípios: ${(resolucaoObj.quantidade || 0).toLocaleString('pt-BR')}`;
+
+                    const tbodyModal = document.getElementById('modal_municipios_tbody');
+                    tbodyModal.innerHTML = '';
+
+                    const listaMuniRes = resolucaoObj.municipios || resolucaoObj.lista_municipios || resolucaoObj.municipios_aderidos || resolucaoObj.itens || resolucaoObj.lista || [];
+
+                    if (listaMuniRes && listaMuniRes.length > 0) {
+                        listaMuniRes.forEach(m => {
+                            const nomeMun = m["Nome do município (IBGE)"] || m.nome_ibge || m.nome || m.municipio || '';
+                            const codigoMun = m["Código do Município"] || m.ibge || m.codigo_ibge || '';
+                            const nomeCompletoModal = codigoMun ? `${nomeMun} (${codigoMun})` : nomeMun;
+                            const ufMun = m.UF || m.uf || '';
+
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `<td>${nomeCompletoModal}</td><td>${ufMun}</td>`;
+                            tbodyModal.appendChild(tr);
+                        });
+                    } else {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td colspan="2" class="text-center text-muted py-3">Lista detalhada de municípios não informada na API para esta resolução.</td>`;
+                        tbodyModal.appendChild(tr);
+                    }
+
+                    $('#modalMunicipiosResolucao').modal('show');
+                }
+            });
+
+            // Botão de download de Excel dentro da Modal
+            document.getElementById('btnBaixarExcelModal').addEventListener('click', function () {
+                if (!resolucaoAtualSelecionada) return;
+                const { ano, resNome, resolucaoObj } = resolucaoAtualSelecionada;
+
+                let rows = [];
+                const listaMuniRes = resolucaoObj.municipios || resolucaoObj.lista_municipios || resolucaoObj.municipios_aderidos || resolucaoObj.itens || resolucaoObj.lista || [];
+
+                if (listaMuniRes && listaMuniRes.length > 0) {
+                    rows = listaMuniRes.map(m => {
+                        const nomeMun = m["Nome do município (IBGE)"] || m.nome_ibge || m.nome || m.municipio || '';
+                        const codigoMun = m["Código do Município"] || m.ibge || m.codigo_ibge || '';
+                        return {
+                            'Ano': ano,
+                            'Resolução': resNome,
+                            'Código do Município': codigoMun,
+                            'Nome do município (IBGE)': nomeMun,
+                            'UF': m.UF || m.uf || ''
+                        };
+                    });
+                } else {
+                    rows = [{
+                        'Ano': ano,
+                        'Número da Resolução': resNome,
+                        'Quantidade de Municípios Aderidos': resolucaoObj.quantidade
+                    }];
+                }
+
+                const worksheet = XLSX.utils.json_to_sheet(rows);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Resolucao_Detalhes");
+
+                const safeName = resNome.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+                XLSX.writeFile(workbook, `${safeName}.xlsx`);
+            });
+        });
+    </script>
+</body>
+
+</html>
