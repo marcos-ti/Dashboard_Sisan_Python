@@ -41,3 +41,12 @@ seu-repositorio/
 ├── requirements.txt         # Lista de dependências do projeto
 ├── Procfile                 # Arquivo de configuração de deploy (para o Render)
 └── Base_Painel_Indicadores_municipais.xlsx  # Base de dados (Excel)
+---
+
+## Link do site:
+https://dashboard-sisan-python.onrender.com/monitoramento
+
+## Link do github com vídeo do sistema:
+https://github.com/marcos-ti/Dashboard_Sisan_Python/blob/main/Painel-Sisan-Python-IA-2026-07-30.mp4
+
+---
