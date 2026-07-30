@@ -18,7 +18,7 @@ Este é um projeto web desenvolvido em **Python (Flask)** para o monitoramento d
 * **Mapa Interativo:** Visualização geoespacial das adesões por estado/UF utilizando Leaflet.js.
 * **Detalhamento por Resoluções:** Tabelas organizadas por ano e número de resolução, permitindo consultar os municípios correspondentes.
 * **Filtros e Responsividade:** Layout moderno e adaptável para diferentes tamanhos de tela (computadores, tablets e celulares) utilizando Bootstrap.
-* **Busca via IA:** Área para consultas guiadas via IA sobre informações sobre monitoramento do Sisan.
+* **Consulta Inteligente por IA: Ferramenta de perguntas e respostas para extrair insights e dados do monitoramento do Sisan com o auxílio de inteligência artificial.
 
 ---
 
