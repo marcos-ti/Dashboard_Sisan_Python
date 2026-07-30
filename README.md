@@ -26,17 +26,17 @@ Este é um projeto web desenvolvido em **Python (Flask)** para o monitoramento d
 
 O projeto foi construído utilizando as seguintes tecnologias e bibliotecas:
 
-* ** [Python](https://www.python.org/)** (Versão 3.x)
-* ** [Flask](https://flask.palletsprojects.com/)** (Microframework web)
-* ** [Pandas](https://pandas.pydata.org/)** (Manipulação e análise de dados)
-* ** [Openpyxl](https://openpyxl.readthedocs.io/)** (Leitura de arquivos Excel)
-* ** [Bootstrap 4.6](https://getbootstrap.com/)** (Estilização e componentes visuais)
-* ** [Chart.js](https://www.chartjs.org/)** (Gráficos interativos)
-* ** [Leaflet.js](https://leafletjs.com/)** (Mapas interativos)
-* ** [FontAwesome](https://fontawesome.com/)** (Ícones)
-* ** [Gunicorn](https://gunicorn.org/)** (Servidor WSGI para produção)
-* ** [Google GenAI](https://ai.google.dev/)** (Integração com Inteligência Artificial)
-* ** [Python-Dotenv](https://saurabh-kumar.com/python-dotenv/)** (Gerenciamento de variáveis de ambiente)
+* ** [Python](https://www.python.org/) ** (Versão 3.x)
+* ** [Flask](https://flask.palletsprojects.com/) ** (Microframework web)
+* ** [Pandas](https://pandas.pydata.org/) ** (Manipulação e análise de dados)
+* ** [Openpyxl](https://openpyxl.readthedocs.io/) ** (Leitura de arquivos Excel)
+* ** [Bootstrap 4.6](https://getbootstrap.com/) ** (Estilização e componentes visuais)
+* ** [Chart.js](https://www.chartjs.org/) ** (Gráficos interativos)
+* ** [Leaflet.js](https://leafletjs.com/) ** (Mapas interativos)
+* ** [FontAwesome](https://fontawesome.com/) ** (Ícones)
+* ** [Gunicorn](https://gunicorn.org/) ** (Servidor WSGI para produção)
+* ** [Google GenAI](https://ai.google.dev/) ** (Integração com Inteligência Artificial)
+* ** [Python-Dotenv](https://saurabh-kumar.com/python-dotenv/) ** (Gerenciamento de variáveis de ambiente)
 
 ---
 
