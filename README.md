@@ -1,6 +1,6 @@
 # 📊 Painel SISAN - Monitoramento de Adesões Municipais
 
-Este é um projeto web desenvolvido em **Python (Flask)** para o monitoramento, análise e visualização de dados de adesão e indicadores do **SISAN (Sistema Nacional de Segurança Alimentar e Nutricional)** nos municípios brasileiros. O sistema processa uma base de dados em Excel utilizando **Pandas** e exibe as informações através de um painel interativo estilizado com **Bootstrap**.
+Este é um projeto web desenvolvido em **Python (Flask)** para o monitoramento de dados de adesão e indicadores do **SISAN (Sistema Nacional de Segurança Alimentar e Nutricional)** nos municípios brasileiros. O sistema processa uma base de dados em Excel utilizando **Pandas** e exibe as informações através de um painel interativo estilizado com **Bootstrap**.
 
 ---
 
